@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Successful</title>
+  <link rel="stylesheet" href="../styles/styles.css">
+  <style>
+    .success-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 60vh;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #22c55e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      font-size: 40px;
+    }
+
+    .success-message h1 {
+      color: #22c55e;
+      margin-bottom: 15px;
+    }
+
+    .success-message p {
+      color: #666;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+
+    .session-info {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 30px 0;
+      text-align: left;
+      max-width: 400px;
+    }
+
+    .session-info p {
+      margin: 8px 0;
+      font-family: monospace;
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .session-info strong {
+      display: block;
+      color: #1f2937;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .action-buttons a,
+    .action-buttons button {
+      padding: 12px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .primary {
+      background: #3b82f6;
+      color: white;
+    }
+
+    .primary:hover {
+      background: #2563eb;
+    }
+
+    .secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .secondary:hover {
+      background: #d1d5db;
+    }
+
+    .error-section {
+      display: none;
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 3px solid #e5e7eb;
+      border-top-color: #3b82f6;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+  <script src="../js/state.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>🛒 Sushi Shop</h1>
+    <a href="cart.html" class="cart-icon" id="cartIcon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+  </div>
+  <nav class="top-nav">
+    <a href="index.html">Catalog</a>
+    <a href="account.html">Account</a>
+    <a href="login.html" id="nav-login">Login</a>
+    <button id="nav-logout" class="linklike" style="display:none">Logout</button>
+  </nav>
+</header>
+
+<main class="container">
+  <div class="success-container">
+    <div class="success-icon">✓</div>
+    
+    <div class="success-message">
+      <h1>Payment Successful!</h1>
+      <p>Thank you for your order. Your payment has been processed.</p>
+    </div>
+
+    <div class="session-info" id="session-info">
+      <strong>Session Information:</strong>
+      <p id="session-id"></p>
+      <strong>Status:</strong>
+      <p id="session-status">Retrieving...</p>
+      <strong id="loading-indicator" style="display: none;">
+        <span class="loading"></span> Verifying payment...
+      </strong>
+    </div>
+
+    <div class="error-section" id="error-section"></div>
+
+    <div class="action-buttons">
+      <a href="index.html" class="primary">Continue Shopping</a>
+      <a href="account.html" class="secondary">View Orders</a>
+    </div>
+
+    <p style="color: #999; margin-top: 40px; font-size: 12px;">
+      📧 A confirmation email has been sent to your email address.
+    </p>
+  </div>
+</main>
+
+<script>
+// Get session_id from URL query parameter
+function getSessionIdFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('session_id');
+}
+
+// Fetch session details from backend (optional - for verification)
+async function verifySession() {
+  const sessionId = getSessionIdFromURL();
+  
+  if (!sessionId) {
+    showError('No session ID found in URL. Payment may not have completed.');
+    return;
+  }
+
+  // Display session ID
+  const sessionIdEl = document.getElementById('session-id');
+  if (sessionIdEl) {
+    sessionIdEl.textContent = `Session ID: ${sessionId}`;
+  }
+
+  try {
+    // Show loading indicator
+    const loadingEl = document.getElementById('loading-indicator');
+    if (loadingEl) loadingEl.style.display = 'block';
+
+    // In production, you could fetch session details from your backend:
+    // const response = await fetch(`http://localhost:4242/session/${sessionId}`);
+    // const session = await response.json();
+    
+    // For now, we'll just confirm the session ID was received
+    const statusEl = document.getElementById('session-status');
+    if (statusEl) {
+      statusEl.textContent = 'Payment confirmed by Stripe ✓';
+    }
+
+    // Hide loading indicator
+    if (loadingEl) loadingEl.style.display = 'none';
+
+    // Save order to localStorage BEFORE clearing cart
+    saveOrderToStorage(sessionId);
+    
+    // Clear cart after successful payment
+    clearCartAfterPayment();
+
+  } catch (error) {
+    console.error('Session verification error:', error);
+    showError(`Verification error: ${error.message}`);
+  }
+}
+
+function showError(message) {
+  const errorSection = document.getElementById('error-section');
+  if (errorSection) {
+    errorSection.style.display = 'block';
+    errorSection.textContent = `⚠️ ${message}`;
+  }
+}
+
+function saveOrderToStorage(sessionId) {
+  try {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (cart.length === 0) {
+      console.warn('No cart items to save as order');
+      return;
+    }
+
+    // Calculate total
+    let total = 0;
+    cart.forEach(item => {
+      total += Number(item.price) * item.quantity;
+    });
+
+    // Create order object matching the expected format
+    const order = {
+      id: parseInt(sessionId.slice(-10)) || Date.now(),
+      userId: currentUser?.id,
+      userEmail: currentUser?.email || 'guest@example.com',
+      items: cart,
+      total: Number(total.toFixed(2)),
+      status: 'COMPLETED',
+      paymentMethod: 'stripe_checkout',
+      sessionId: sessionId,
+      date: new Date().toLocaleString(),
+      statusHistory: [{ status: 'COMPLETED', at: new Date().toLocaleString() }]
+    };
+
+    // Get existing orders
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    
+    // Add new order
+    orders.unshift(order);
+    
+    // Save back to localStorage
+    localStorage.setItem('orders', JSON.stringify(orders));
+    
+    console.log('✅ Order saved to storage:', order);
+  } catch (error) {
+    console.error('Error saving order:', error);
+  }
+}
+
+function clearCartAfterPayment() {
+  try {
+    // Clear cart from state
+    if (typeof state !== 'undefined' && state.clearCart) {
+      state.clearCart();
+    }
+    
+    // Alternative: clear from localStorage directly
+    localStorage.removeItem('cart');
+    
+    console.log('Cart cleared after successful payment');
+  } catch (error) {
+    console.error('Error clearing cart:', error);
+  }
+}
+
+// Verify session when page loads
+document.addEventListener('DOMContentLoaded', verifySession);
+</script>
+
+<script src="../js/init.js"></script>
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

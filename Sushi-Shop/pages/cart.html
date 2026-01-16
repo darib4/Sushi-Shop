@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <title>Cart</title>
+  <link rel="stylesheet" href="../styles/cart.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="../js/state.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <h1>Your Cart</h1>
+    <a href="cart.html" class="cart-icon" id="cartIcon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </a>
+  </div>
+  <nav class="top-nav">
+    <a href="index.html">Catalog</a>
+    <a href="account.html">Account</a>
+    <a href="admin.html" id="nav-admin" style="display:none">Admin</a>
+    <a href="login.html" id="nav-login">Login</a>
+    <button id="nav-logout" class="linklike" style="display:none">Logout</button>
+  </nav>
+</header>
+<ul id="cart-list"></ul>
+<h3>Total: <span id="total"></span> BGN</h3>
+
+<div class="cart-actions">
+  <a class="primary" href="checkout.html">Proceed to Checkout (Demo)</a>
+  <button class="primary" id="pay-card-btn" onclick="handleStripeCheckout()">Pay with Card (Stripe)</button>
+  <button class="danger" onclick="clearCart()">Clear Cart</button>
+</div>
+
+<p class="note">Stage 3: checkout will authorize card, check stock and process your order pipeline.</p>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="../js/init.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/view.js"></script>
+<script src="../js/nav.js"></script>
+
+</body>
+</html>

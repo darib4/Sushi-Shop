@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout</title>
+  <link rel="stylesheet" href="../styles/checkout.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="../js/state.js"></script>
+</head>
+<body>
+  <header>
+    <div class="header-top">
+      <h1>Checkout</h1>
+      <a href="cart.html" class="cart-icon" id="cartIcon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+        </svg>
+        <span class="cart-badge" id="cartBadge">0</span>
+      </a>
+    </div>
+    <nav class="top-nav">
+      <a href="index.html">Catalog</a>
+      <a href="account.html">Account</a>
+      <button id="nav-logout" class="linklike">Logout</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Order summary</h2>
+      <div id="summary"></div>
+      <p class="total">Total: <span id="total">0.00</span> BGN</p>
+    </section>
+
+    <section class="card">
+      <h2>Delivery details</h2>
+      <form id="checkout-form">
+        <input type="text" name="fullName" placeholder="Full name" required>
+        <input type="text" name="phone" placeholder="Phone" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <textarea name="note" placeholder="Note (optional)"></textarea>
+
+        <h3>Card authorization (demo)</h3>
+        <input type="text" name="cardNumber" placeholder="Card number (16 digits)" required>
+        <div class="row">
+          <input type="text" name="exp" placeholder="MM/YY" required>
+          <input type="password" name="cvv" placeholder="CVV" required>
+        </div>
+
+        <button type="submit" class="primary">Pay & Place Order</button>
+        <p class="hint">This is a demo: card payment and emails are simulated and stored in localStorage.</p>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Order pipeline</h2>
+      <ol id="pipeline" class="pipeline"></ol>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="../js/state.js"></script>
+  <script src="../js/init.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/orders.js"></script>
+  <script src="../js/checkout.js"></script>
+  <script src="../js/nav.js"></script>
+</body>
+</html>
